@@ -10,85 +10,124 @@
 <link rel="manifest" href="manifest.json">
 <title>會議記錄工具</title>
 <style>
-:root{--blue:#0071e3;--red:#ff3b30;--green:#34c759;--bg:#f2f2f7;--card:#fff;--text:#1c1c1e;--sub:#6e6e73;--border:#e5e5ea;--safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom)}
+:root{--blue:#0071e3;--red:#ff3b30;--green:#34c759;--orange:#ff9500;--bg:#f2f2f7;--card:#fff;--text:#1c1c1e;--sub:#6e6e73;--border:#e5e5ea;--safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;padding-bottom:calc(120px + var(--safe-bot))}
-.nav{background:rgba(242,242,247,.88);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);padding:calc(var(--safe-top) + 12px) 20px 12px;position:sticky;top:0;z-index:10;border-bottom:.5px solid var(--border)}
-.nav-title{font-size:17px;font-weight:600;text-align:center}
+body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;padding-bottom:calc(140px + var(--safe-bot))}
+.nav{background:rgba(242,242,247,.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);padding:calc(var(--safe-top) + 12px) 20px 12px;position:sticky;top:0;z-index:20;border-bottom:.5px solid var(--border)}
+.nav-title{font-size:17px;font-weight:600;text-align:center;color:var(--text)}
 .page{padding:16px;display:flex;flex-direction:column;gap:14px}
+.section-title{font-size:12px;font-weight:500;color:var(--sub);padding:0 4px;letter-spacing:.04em;text-transform:uppercase}
 .card{background:var(--card);border-radius:14px;overflow:hidden}
-.card-row{display:flex;align-items:center;padding:12px 16px;border-bottom:.5px solid var(--border);gap:12px}
+.card-row{display:flex;align-items:center;padding:11px 16px;border-bottom:.5px solid var(--border);gap:10px;min-height:44px}
 .card-row:last-child{border-bottom:none}
-.row-label{font-size:15px;color:var(--text);min-width:72px}
-.row-input{flex:1;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;text-align:right}
+.row-label{font-size:15px;color:var(--text);min-width:60px;flex-shrink:0}
+.row-input{flex:1;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;text-align:right;min-width:0}
 .row-input::placeholder{color:#c7c7cc}
-.rec-card{background:var(--card);border-radius:14px;padding:28px 20px 24px;display:flex;flex-direction:column;align-items:center;gap:14px}
-.rec-btn{width:80px;height:80px;border-radius:50%;border:2.5px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.att-block{padding:12px 16px;border-bottom:.5px solid var(--border)}
+.att-block:last-child{border-bottom:none}
+.att-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.att-num{font-size:12px;font-weight:500;color:var(--blue);background:#e8f0fe;padding:2px 8px;border-radius:99px}
+.att-remove{background:none;border:none;color:var(--sub);font-size:20px;cursor:pointer;line-height:1;padding:0 2px}
+.att-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.att-field{display:flex;flex-direction:column;gap:3px}
+.att-field-full{grid-column:1/-1}
+.att-label{font-size:11px;color:var(--sub)}
+.att-input{border:.5px solid var(--border);border-radius:8px;padding:7px 10px;font-size:14px;color:var(--text);background:var(--bg);outline:none;width:100%}
+.att-input:focus{border-color:var(--blue);background:#fff}
+.add-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;color:var(--blue);font-size:14px;font-weight:500;background:none;border:none;cursor:pointer;width:100%}
+.rec-card{background:var(--card);border-radius:14px;padding:24px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.rec-btn{width:76px;height:76px;border-radius:50%;border:2.5px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
 .rec-btn.on{border-color:var(--red);background:#fff1f0}
-.rec-btn svg{width:32px;height:32px}
-.timer{font-size:34px;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.rec-btn svg{width:30px;height:30px}
+.timer{font-size:32px;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:.02em;color:var(--text)}
 .status-row{display:flex;align-items:center;gap:6px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:none;animation:blink 1s infinite}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--red);display:none;animation:blink 1s infinite;flex-shrink:0}
 .dot.show{display:block}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.status-txt{font-size:14px;color:var(--sub)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.status-txt{font-size:13px;color:var(--sub)}
 .seg-card{background:var(--card);border-radius:14px;overflow:hidden}
-.seg-header{padding:12px 16px 10px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.seg-header{padding:11px 16px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .seg-header-txt{font-size:13px;font-weight:500;color:var(--sub)}
-.seg-count-badge{font-size:12px;color:var(--sub);background:var(--bg);padding:2px 8px;border-radius:99px}
-.seg-list{padding:8px 0;min-height:100px}
-.empty-hint{font-size:14px;color:#c7c7cc;text-align:center;padding:32px 0}
-.seg{display:flex;gap:10px;padding:8px 16px;border-bottom:.5px solid var(--border);font-size:15px;line-height:1.55}
+.badge{font-size:11px;color:var(--sub);background:var(--bg);padding:2px 8px;border-radius:99px}
+.seg-list{padding:4px 0;min-height:80px}
+.empty-hint{font-size:14px;color:#c7c7cc;text-align:center;padding:28px 0}
+.seg{display:flex;gap:10px;padding:8px 16px;border-bottom:.5px solid var(--border);font-size:14px;line-height:1.55}
 .seg:last-child{border-bottom:none}
-.seg-ts{font-size:12px;color:#c7c7cc;min-width:36px;padding-top:2px;font-variant-numeric:tabular-nums}
-.seg-txt{flex:1}
+.seg-ts{font-size:11px;color:#c7c7cc;min-width:34px;padding-top:2px;font-variant-numeric:tabular-nums;flex-shrink:0}
+.seg-txt{flex:1;color:var(--text)}
 .interim{color:#c7c7cc;font-style:italic}
+.todo-block{padding:10px 16px;border-bottom:.5px solid var(--border)}
+.todo-block:last-child{border-bottom:none}
+.todo-row{display:flex;align-items:center;gap:8px}
+.todo-input{flex:1;border:.5px solid var(--border);border-radius:8px;padding:7px 10px;font-size:14px;color:var(--text);background:var(--bg);outline:none}
+.todo-input:focus{border-color:var(--blue);background:#fff}
+.todo-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.todo-remove{background:none;border:none;color:#c7c7cc;font-size:20px;cursor:pointer;line-height:1;flex-shrink:0}
 .result-card{background:var(--card);border-radius:14px;overflow:hidden;display:none}
 .result-card.show{display:block}
-.result-header{padding:12px 16px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.result-header{padding:11px 16px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .result-title{font-size:13px;font-weight:500;color:var(--sub)}
-.result-badge{font-size:12px;padding:2px 10px;border-radius:99px;background:#e3f2e8;color:#1a7a3a}
-.result-body{padding:16px;font-size:15px;line-height:1.7;white-space:pre-wrap;color:var(--text)}
+.result-badge{font-size:11px;padding:2px 10px;border-radius:99px;background:#e3f2e8;color:#1a7a3a}
+.result-body{padding:16px;font-size:15px;line-height:1.75;white-space:pre-wrap;color:var(--text)}
 .loading-row{display:flex;align-items:center;justify-content:center;gap:10px;padding:24px;color:var(--sub);font-size:14px}
-.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+.spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(242,242,247,.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--border);padding:10px 16px calc(10px + var(--safe-bot));display:flex;gap:8px;flex-wrap:wrap}
-.action-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 12px;border-radius:12px;border:.5px solid var(--border);font-size:14px;font-weight:500;cursor:pointer;background:var(--card);color:var(--blue)}
-.action-btn:disabled{opacity:.35;pointer-events:none}
-.action-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
-.action-btn.danger{background:#fff1f0;color:var(--red);border-color:#ffccc9}
-.warn{font-size:13px;color:var(--red);background:#fff1f0;padding:10px 14px;border-radius:10px;text-align:center;width:100%}
-.key-section{padding:12px 16px}
-.key-label{font-size:12px;color:var(--sub);margin-bottom:6px}
-.key-row{display:flex;gap:8px;align-items:center}
+.key-card{background:var(--card);border-radius:14px;padding:14px 16px}
+.key-label{font-size:12px;color:var(--sub);margin-bottom:8px}
+.key-row{display:flex;gap:8px}
 .key-input{flex:1;border:.5px solid var(--border);border-radius:10px;padding:9px 12px;font-size:14px;color:var(--text);background:var(--bg);outline:none}
-.key-input:focus{border-color:var(--blue)}
-.key-save-btn{padding:9px 16px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-size:14px;cursor:pointer;white-space:nowrap}
-.key-ok{font-size:12px;color:var(--green);margin-top:4px}
+.key-input:focus{border-color:var(--blue);background:#fff}
+.key-save{padding:9px 16px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
+.key-ok{font-size:12px;color:var(--green);margin-top:6px;display:none}
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(242,242,247,.95);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--border);padding:10px 16px calc(10px + var(--safe-bot));display:flex;gap:8px}
+.bot-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:12px 8px;border-radius:12px;border:.5px solid var(--border);font-size:14px;font-weight:500;cursor:pointer;background:var(--card);color:var(--blue)}
+.bot-btn:disabled{opacity:.3;pointer-events:none}
+.bot-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.bot-btn.danger{background:#fff1f0;color:var(--red);border-color:#ffd0cc}
+.warn{font-size:13px;color:var(--red);background:#fff1f0;padding:8px 12px;border-radius:10px;text-align:center;margin-top:8px}
 </style>
 </head>
 <body>
 <div class="nav"><div class="nav-title">會議記錄工具</div></div>
 <div class="page">
-  <div class="card">
-    <div class="key-section">
-      <div class="key-label">Claude API Key（僅存在你的裝置）</div>
-      <div class="key-row">
-        <input class="key-input" type="password" id="api-key-input" placeholder="貼上 sk-ant-... 開頭的 Key">
-        <button class="key-save-btn" onclick="saveKey()">儲存</button>
+  <div class="key-card" id="key-card">
+    <div id="setup-view">
+      <div class="key-label">首次設定：輸入 API Key 與自訂密碼</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input class="key-input" type="password" id="api-key-input" placeholder="貼上 sk-ant-... 開頭的 Key" style="width:100%">
+        <div class="key-row">
+          <input class="key-input" type="password" id="pin-set" placeholder="設定 4-8 位數字密碼" maxlength="8">
+          <button class="key-save" onclick="setupKey()">儲存</button>
+        </div>
       </div>
-      <div class="key-ok" id="key-ok" style="display:none">✓ Key 已儲存</div>
+      <div class="key-ok" id="setup-ok">✓ 設定完成！下次只需輸入密碼</div>
+    </div>
+    <div id="unlock-view" style="display:none">
+      <div class="key-label">輸入密碼解鎖</div>
+      <div class="key-row">
+        <input class="key-input" type="password" id="pin-input" placeholder="輸入密碼" maxlength="8">
+        <button class="key-save" onclick="unlockKey()">解鎖</button>
+      </div>
+      <div class="key-ok" id="unlock-ok">✓ 已解鎖</div>
+      <div id="unlock-err" style="font-size:12px;color:var(--red);margin-top:6px;display:none">密碼錯誤，請再試一次</div>
     </div>
   </div>
+  <div class="section-title">基本資訊</div>
   <div class="card">
     <div class="card-row"><span class="row-label">會議主題</span><input class="row-input" type="text" id="m-title" placeholder="輸入主題"></div>
     <div class="card-row"><span class="row-label">主持人</span><input class="row-input" type="text" id="m-host" placeholder="姓名"></div>
-    <div class="card-row"><span class="row-label">出席人員</span><input class="row-input" type="text" id="m-att" placeholder="以逗號分隔"></div>
     <div class="card-row"><span class="row-label">日期</span><input class="row-input" type="date" id="m-date"></div>
+    <div class="card-row"><span class="row-label">地點</span><input class="row-input" type="text" id="m-location" placeholder="會議室或線上"></div>
   </div>
+  <div class="section-title">出席人員</div>
+  <div class="card" id="att-card">
+    <div id="att-list"></div>
+    <button class="add-btn" onclick="addAttendee()">＋ 新增出席人員</button>
+  </div>
+  <div class="section-title">錄音</div>
   <div class="rec-card">
     <button class="rec-btn" id="rec-btn" onclick="toggleRec()">
-      <svg id="mic-svg" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <svg id="mic-svg" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="9" y="2" width="6" height="11" rx="3"/>
         <path d="M5 10a7 7 0 0 0 14 0"/>
         <line x1="12" y1="19" x2="12" y2="22"/>
@@ -102,48 +141,65 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
     </div>
     <div id="warn-box" style="width:100%"></div>
   </div>
+  <div class="section-title">即時逐字稿</div>
   <div class="seg-card">
     <div class="seg-header">
-      <span class="seg-header-txt">即時逐字稿</span>
-      <span class="seg-count-badge" id="seg-count">0 段</span>
+      <span class="seg-header-txt">內容</span>
+      <span class="badge" id="seg-count">0 段</span>
     </div>
     <div class="seg-list" id="seg-list">
-      <div class="empty-hint" id="empty-hint">錄音後將即時顯示文字</div>
+      <div class="empty-hint" id="empty-hint">錄音後將即時顯示</div>
     </div>
+  </div>
+  <div class="section-title">待辦事項</div>
+  <div class="card" id="todo-card">
+    <div id="todo-list"></div>
+    <button class="add-btn" onclick="addTodo()">＋ 新增待辦</button>
   </div>
   <div class="result-card" id="result-card">
     <div class="result-header">
-      <span class="result-title">會議記錄</span>
-      <span class="result-badge">Claude 整理</span>
+      <span class="result-title">整理後的會議記錄</span>
+      <span class="result-badge">Claude AI</span>
     </div>
     <div id="result-loading" class="loading-row" style="display:none">
-      <div class="spinner"></div>整理中，請稍候...
+      <div class="spinner"></div>Claude 整理中，請稍候...
     </div>
     <div class="result-body" id="result-body"></div>
   </div>
 </div>
 <div class="bottom-bar">
-  <button class="action-btn" id="copy-btn" onclick="copyTranscript()" disabled>複製逐字稿</button>
-  <button class="action-btn primary" id="ai-btn" onclick="sendToClaude()" disabled>Claude 整理 ↗</button>
-  <button class="action-btn danger" id="clear-btn" onclick="clearAll()" disabled>清除</button>
+  <button class="bot-btn" id="copy-btn" onclick="copyTranscript()" disabled>複製逐字稿</button>
+  <button class="bot-btn primary" id="ai-btn" onclick="sendToClaude()" disabled>Claude 整理</button>
+  <button class="bot-btn danger" id="clear-btn" onclick="clearAll()" disabled>清除</button>
 </div>
 <script>
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
-let rec=null,segs=[],timerInt=null,startTime=null,isRec=false;
+let rec=null,segs=[],timerInt=null,startTime=null,isRec=false,attCount=0,todoCount=0,unlockedKey=null;
 document.getElementById('m-date').value=new Date().toISOString().split('T')[0];
-const stored=localStorage.getItem('claude_api_key');
-if(stored){document.getElementById('api-key-input').value=stored;document.getElementById('key-ok').style.display='block';}
-function saveKey(){const k=document.getElementById('api-key-input').value.trim();if(!k){alert('請貼上 API Key');return;}localStorage.setItem('claude_api_key',k);document.getElementById('key-ok').style.display='block';}
+addAttendee();addTodo();
+function xor(str,key){return str.split('').map((c,i)=>String.fromCharCode(c.charCodeAt(0)^key.charCodeAt(i%key.length))).join('')}
+function toB64(str){return btoa(unescape(encodeURIComponent(str)))}
+function fromB64(str){return decodeURIComponent(escape(atob(str)))}
+function initKeyUI(){if(localStorage.getItem('mk_enc')){document.getElementById('setup-view').style.display='none';document.getElementById('unlock-view').style.display='block';}}
+initKeyUI();
+function setupKey(){const apiKey=document.getElementById('api-key-input').value.trim();const pin=document.getElementById('pin-set').value.trim();if(!apiKey){alert('請貼上 API Key');return;}if(pin.length<4){alert('密碼至少 4 位數');return;}localStorage.setItem('mk_enc',toB64(xor(apiKey,pin)));unlockedKey=apiKey;document.getElementById('setup-ok').style.display='block';setTimeout(()=>{document.getElementById('key-card').style.display='none';},1200);}
+function unlockKey(){const pin=document.getElementById('pin-input').value.trim();const enc=localStorage.getItem('mk_enc');if(!enc){alert('請先完成設定');return;}try{const d=xor(fromB64(enc),pin);if(!d.startsWith('sk-'))throw new Error('wrong');unlockedKey=d;document.getElementById('unlock-ok').style.display='block';document.getElementById('unlock-err').style.display='none';setTimeout(()=>{document.getElementById('key-card').style.display='none';},800);}catch(e){document.getElementById('unlock-err').style.display='block';}}
+function addAttendee(){attCount++;const id=attCount;const list=document.getElementById('att-list');const div=document.createElement('div');div.className='att-block';div.id='att-'+id;div.innerHTML=`<div class="att-header"><span class="att-num">人員 ${id}</span><button class="att-remove" onclick="removeAtt(${id})">×</button></div><div class="att-fields"><div class="att-field att-field-full"><span class="att-label">姓名</span><input class="att-input" type="text" id="att-name-${id}" placeholder="王小明"></div><div class="att-field"><span class="att-label">公司</span><input class="att-input" type="text" id="att-company-${id}" placeholder="公司名稱"></div><div class="att-field"><span class="att-label">職位</span><input class="att-input" type="text" id="att-role-${id}" placeholder="職稱"></div></div>`;list.appendChild(div);}
+function removeAtt(id){const el=document.getElementById('att-'+id);if(el)el.remove();}
+function getAttendees(){const r=[];document.querySelectorAll('.att-block').forEach(b=>{const id=b.id.replace('att-','');const name=document.getElementById('att-name-'+id)?.value.trim();const company=document.getElementById('att-company-'+id)?.value.trim();const role=document.getElementById('att-role-'+id)?.value.trim();if(name||company||role){let s=name||'（未填姓名）';if(company||role)s+='（'+[role,company].filter(Boolean).join('・')+'）';r.push(s);}});return r;}
+function addTodo(){todoCount++;const id=todoCount;const list=document.getElementById('todo-list');const div=document.createElement('div');div.className='todo-block';div.id='todo-'+id;div.innerHTML=`<div class="todo-row"><input class="todo-input" type="text" id="todo-item-${id}" placeholder="待辦事項內容"><button class="todo-remove" onclick="removeTodo(${id})">×</button></div><div class="todo-meta"><input class="att-input" type="text" id="todo-owner-${id}" placeholder="負責人"><input class="att-input" type="date" id="todo-due-${id}"></div>`;list.appendChild(div);}
+function removeTodo(id){const el=document.getElementById('todo-'+id);if(el)el.remove();}
+function getTodos(){const r=[];document.querySelectorAll('.todo-block').forEach(b=>{const id=b.id.replace('todo-','');const item=document.getElementById('todo-item-'+id)?.value.trim();const owner=document.getElementById('todo-owner-'+id)?.value.trim();const due=document.getElementById('todo-due-'+id)?.value;if(item)r.push({item,owner:owner||'—',due:due||'—'});});return r;}
 function fmt(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function toggleRec(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){document.getElementById('warn-box').innerHTML='<div class="warn">⚠️ iPhone 請用 Safari 瀏覽器</div>';return;}isRec?stopRec():startRec();}
+function toggleRec(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){document.getElementById('warn-box').innerHTML='<div class="warn">⚠️ iPhone 請使用 Safari 瀏覽器</div>';return;}isRec?stopRec():startRec();}
 function startRec(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;rec=new SR();rec.lang='zh-TW';rec.continuous=true;rec.interimResults=true;isRec=true;startTime=Date.now();document.getElementById('rec-btn').classList.add('on');document.getElementById('mic-svg').setAttribute('stroke','#ff3b30');document.getElementById('status-txt').textContent='錄音中，再點一次停止';document.getElementById('dot').classList.add('show');document.getElementById('warn-box').innerHTML='';timerInt=setInterval(()=>document.getElementById('timer').textContent=fmt(Date.now()-startTime),500);let segStart=startTime;rec.onresult=(e)=>{let interim='',final='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript;else interim+=e.results[i][0].transcript;}if(final){segs.push({ts:fmt(segStart-startTime),text:final.trim()});segStart=Date.now();renderSegs();}if(interim)showInterim(fmt(segStart-startTime),interim);};rec.onerror=(e)=>{if(e.error==='not-allowed')document.getElementById('warn-box').innerHTML='<div class="warn">請允許麥克風：設定 → Safari → 麥克風 → 允許</div>';};rec.onend=()=>{if(isRec)rec.start();};rec.start();}
-function stopRec(){isRec=false;rec&&rec.stop();rec=null;clearInterval(timerInt);document.getElementById('rec-btn').classList.remove('on');document.getElementById('mic-svg').setAttribute('stroke','#555');document.getElementById('status-txt').textContent=segs.length?'錄音完成，可整理成會議記錄':'點擊麥克風開始錄音';document.getElementById('dot').classList.remove('show');const r=document.getElementById('interim-row');r&&r.remove();if(segs.length)['copy-btn','ai-btn','clear-btn'].forEach(id=>document.getElementById(id).disabled=false);}
+function stopRec(){isRec=false;rec&&rec.stop();rec=null;clearInterval(timerInt);document.getElementById('rec-btn').classList.remove('on');document.getElementById('mic-svg').setAttribute('stroke','#888');document.getElementById('status-txt').textContent=segs.length?'錄音完成':'點擊麥克風開始錄音';document.getElementById('dot').classList.remove('show');const r=document.getElementById('interim-row');r&&r.remove();if(segs.length)['copy-btn','ai-btn','clear-btn'].forEach(id=>document.getElementById(id).disabled=false);}
 function renderSegs(){const list=document.getElementById('seg-list');const hint=document.getElementById('empty-hint');if(hint)hint.style.display='none';const interim=document.getElementById('interim-row');[...list.querySelectorAll('.seg:not(#interim-row)')].forEach(r=>r.remove());const frag=document.createDocumentFragment();segs.forEach(s=>{const d=document.createElement('div');d.className='seg';d.innerHTML=`<span class="seg-ts">${s.ts}</span><span class="seg-txt">${s.text}</span>`;frag.appendChild(d);});interim?list.insertBefore(frag,interim):list.appendChild(frag);document.getElementById('seg-count').textContent=segs.length+' 段';list.scrollTop=list.scrollHeight;}
 function showInterim(ts,txt){let row=document.getElementById('interim-row');if(!row){row=document.createElement('div');row.className='seg';row.id='interim-row';document.getElementById('seg-list').appendChild(row);}row.innerHTML=`<span class="seg-ts">${ts}</span><span class="seg-txt interim">${txt}</span>`;}
-function buildTranscript(){const title=document.getElementById('m-title').value;const host=document.getElementById('m-host').value;const att=document.getElementById('m-att').value;const date=document.getElementById('m-date').value;let out='';if(title||host||att){out+='【會議資訊】\n';if(title)out+=`主題：${title}\n`;if(host)out+=`主持人：${host}\n`;if(att)out+=`出席人員：${att}\n`;if(date)out+=`日期：${date}\n`;out+='\n';}out+='【逐字稿】\n';segs.forEach(s=>{out+=`[${s.ts}] ${s.text}\n`;});return out;}
-function copyTranscript(){navigator.clipboard.writeText(buildTranscript()).catch(()=>{const ta=document.createElement('textarea');ta.value=buildTranscript();document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});const btn=document.getElementById('copy-btn');const o=btn.textContent;btn.textContent='✓ 已複製';setTimeout(()=>btn.textContent=o,2000);}
-async function sendToClaude(){const key=localStorage.getItem('claude_api_key')||document.getElementById('api-key-input').value.trim();if(!key){alert('請先儲存 Claude API Key');return;}const transcript=buildTranscript();const resultCard=document.getElementById('result-card');const resultBody=document.getElementById('result-body');const loading=document.getElementById('result-loading');resultCard.classList.add('show');loading.style.display='flex';resultBody.textContent='';resultCard.scrollIntoView({behavior:'smooth',block:'start'});try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:`請將以下會議逐字稿整理成正式中文會議記錄，格式如下：\n\n📋 會議基本資訊\n（主題、日期、主持人、出席人員）\n\n📝 討論重點摘要\n（條列式，每點一行）\n\n✅ 決議事項\n（條列式）\n\n📌 待辦行動\n（格式：事項 | 負責人 | 期限）\n\n以下是逐字稿：\n\n${transcript}`}]})});if(!res.ok){const err=await res.json();throw new Error(err.error?.message||'API 錯誤');}const data=await res.json();const text=data.content[0].text;loading.style.display='none';resultBody.textContent=text;}catch(e){loading.style.display='none';resultBody.textContent='❌ 發生錯誤：'+e.message+'\n\n請確認 API Key 是否正確，以及帳號是否有足夠額度。';}}
-function clearAll(){segs=[];if(isRec)stopRec();document.getElementById('seg-list').innerHTML='<div class="empty-hint" id="empty-hint">錄音後將即時顯示文字</div>';document.getElementById('timer').textContent='00:00';document.getElementById('status-txt').textContent='點擊麥克風開始錄音';document.getElementById('seg-count').textContent='0 段';document.getElementById('result-card').classList.remove('show');document.getElementById('result-body').textContent='';['copy-btn','ai-btn','clear-btn'].forEach(id=>document.getElementById(id).disabled=true);}
+function buildTranscript(){const title=document.getElementById('m-title').value;const host=document.getElementById('m-host').value;const date=document.getElementById('m-date').value;const location=document.getElementById('m-location').value;const attendees=getAttendees();const todos=getTodos();let out='【會議資訊】\n';if(title)out+=`主題：${title}\n`;if(date)out+=`日期：${date}\n`;if(location)out+=`地點：${location}\n`;if(host)out+=`主持人：${host}\n`;if(attendees.length)out+=`出席人員：\n${attendees.map(a=>'  • '+a).join('\n')}\n`;out+='\n【逐字稿】\n';segs.forEach(s=>{out+=`[${s.ts}] ${s.text}\n`;});if(todos.length){out+='\n【待辦事項】\n';todos.forEach((t,i)=>{out+=`${i+1}. ${t.item} | 負責人：${t.owner} | 期限：${t.due}\n`;});}return out;}
+function copyTranscript(){const txt=buildTranscript();navigator.clipboard.writeText(txt).catch(()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});const btn=document.getElementById('copy-btn');const o=btn.textContent;btn.textContent='✓ 已複製';setTimeout(()=>btn.textContent=o,2000);}
+async function sendToClaude(){const key=unlockedKey;if(!key){alert('請先輸入密碼解鎖');document.getElementById('key-card').style.display='block';return;}const transcript=buildTranscript();const todos=getTodos();const resultCard=document.getElementById('result-card');const resultBody=document.getElementById('result-body');const loading=document.getElementById('result-loading');resultCard.classList.add('show');loading.style.display='flex';resultBody.textContent='';setTimeout(()=>resultCard.scrollIntoView({behavior:'smooth',block:'start'}),100);const todoSection=todos.length?`\n\n另外，會議中已記錄以下待辦事項，請在會議記錄末尾加入「待辦追蹤」區塊：\n${todos.map((t,i)=>`${i+1}. ${t.item}（負責：${t.owner}，期限：${t.due}）`).join('\n')}`:'';try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:`請將以下內容整理成正式繁體中文會議記錄，格式如下：\n\n━━━━━━━━━━━━━━━━━━\n📋 會議基本資訊\n主題：\n日期：\n地點：\n主持人：\n出席人員：（逐一列出姓名、公司、職位）\n\n━━━━━━━━━━━━━━━━━━\n📝 討論重點摘要\n• （條列重點）\n\n━━━━━━━━━━━━━━━━━━\n✅ 決議事項\n• （條列決議）\n\n━━━━━━━━━━━━━━━━━━\n📌 待辦追蹤\n事項 | 負責人 | 期限\n\n━━━━━━━━━━━━━━━━━━\n\n以下是原始資料：\n\n${transcript}${todoSection}`}]})});if(!res.ok){const err=await res.json();throw new Error(err.error?.message||'API 錯誤（'+res.status+'）');}const data=await res.json();loading.style.display='none';resultBody.textContent=data.content[0].text;}catch(e){loading.style.display='none';resultBody.textContent='❌ 錯誤：'+e.message+'\n\n請確認：\n1. API Key 是否正確\n2. Anthropic 帳號是否有餘額\n3. 網路連線是否正常';}}
+function clearAll(){segs=[];if(isRec)stopRec();document.getElementById('seg-list').innerHTML='<div class="empty-hint" id="empty-hint">錄音後將即時顯示</div>';document.getElementById('timer').textContent='00:00';document.getElementById('status-txt').textContent='點擊麥克風開始錄音';document.getElementById('seg-count').textContent='0 段';document.getElementById('result-card').classList.remove('show');document.getElementById('result-body').textContent='';document.getElementById('result-loading').style.display='none';['copy-btn','ai-btn','clear-btn'].forEach(id=>document.getElementById(id).disabled=true);}
 </script>
 </body>
 </html>
